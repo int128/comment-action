@@ -1,21 +1,42 @@
-# typescript-action [![ts](https://github.com/int128/typescript-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/typescript-action/actions/workflows/ts.yaml)
+# comment-action [![ts](https://github.com/int128/comment-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/comment-action/actions/workflows/ts.yaml)
 
-This is a template of TypeScript Action.
+This is an action to post a comment to the current pull request.
+It is inspired from [suzuki-shunsuke/github-comment](https://github.com/suzuki-shunsuke/github-comment).
 
 
 ## Getting Started
 
-To run this action:
+This action infers pull request(s) from the context as follows:
+
+- On `pull_request` event, use the current pull request
+- On `issue` event, use the current issue
+- On `push` event, use pull request(s) associated with the current commit
+- Otherwise, get pull request(s) associated with `github.sha`
+
+To post a comment:
 
 ```yaml
 jobs:
   build:
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: int128/typescript-action@v1
+      - uses: int128/comment-action@v1
         with:
-          name: hello
+          post: |
+            :wave: Hello World
+```
+
+To run a command and post the result:
+
+```yaml
+jobs:
+  build:
+    steps:
+      - uses: int128/comment-action@v1
+        with:
+          run: |
+            yarn test
+          post-on-failure: |
+            :x: Test failure
 ```
 
 
@@ -23,7 +44,13 @@ jobs:
 
 | Name | Default | Description
 |------|----------|------------
-| `name` | (required) | example input
+| `post` | - | If set, post a comment to the pull request
+| `run` | - | If set, run a command and post the result to the pull request
+| `post-on-success` | - | If set, post a comment on success of the command
+| `post-on-failure` | - | If set, post a comment on failure of the command
+| `token` | `github.token` | GitHub token
+
+Either `post` or `run` must be set.
 
 
 ## Outputs

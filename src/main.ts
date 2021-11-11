@@ -3,7 +3,11 @@ import { run } from './run'
 
 const main = async (): Promise<void> => {
   await run({
-    name: core.getInput('name', { required: true }),
+    post: core.getInput('post'),
+    run: core.getInput('run'),
+    postOnSuccess: core.getInput('post-on-success'),
+    postOnFailure: core.getInput('post-on-failure'),
+    token: core.getInput('token'),
   })
 }
 
