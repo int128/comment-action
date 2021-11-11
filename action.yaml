@@ -1,9 +1,24 @@
-name: hello-world
-description: say Hello World
+name: comment-action
+description: post a comment
+
 inputs:
-  name:
-    description: example input
+  post:
+    description: If set, post a comment to the pull request
+    required: false
+  run:
+    description: If set, run a command and post the result to the pull request
+    required: false
+  post-on-success:
+    description: If set, post a comment on success of the command
+    required: false
+  post-on-failure:
+    description: If set, post a comment on failure of the command
+    required: false
+  token:
+    description: GitHub token
     required: true
+    default: ${{ github.token }}
+
 runs:
   using: 'node12'
   main: 'dist/index.js'

@@ -36,7 +36,27 @@ jobs:
       - run: yarn build
       - run: yarn package
 
-      - name: e2e-test
+      - name: With post
         uses: ./
         with:
-          name: foo
+          post: |
+            :memo: E2E test has passed
+
+      - name: With run and success
+        uses: ./
+        with:
+          run: date
+          post-on-success: |
+            :white_check_mark: Success
+          post-on-failure: |
+            :x: Failure
+
+      - name: With run and failure
+        continue-on-error: true
+        uses: ./
+        with:
+          run: false
+          post-on-success: |
+            :white_check_mark: Success
+          post-on-failure: |
+            :x: Failure
