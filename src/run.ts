@@ -26,10 +26,12 @@ export const run = async (inputs: Inputs): Promise<void> => {
   if (inputs.run) {
     const result = await runCommand(inputs.run)
     const context = {
-      code: result.code,
-      lines: result.lines,
-      get output(): string {
-        return this.lines.join('\n')
+      run: {
+        code: result.code,
+        lines: result.lines,
+        get output(): string {
+          return this.lines.join('\n')
+        },
       },
     }
     if (result.code === 0 && inputs.postOnSuccess) {

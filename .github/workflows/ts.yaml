@@ -47,14 +47,14 @@ jobs:
         with:
           run: uname -a
           post-on-success: |
-            :white_check_mark: Success
+            ## :white_check_mark: Success
             ```
-            ${output}
+            ${run.output}
             ```
           post-on-failure: |
-            :x: Failure
+            ## :x: Failure
             ```
-            ${output}
+            ${run.output}
             ```
 
       - name: With run and failure
@@ -63,12 +63,12 @@ jobs:
         with:
           run: false
           post-on-success: |
-            :white_check_mark: Success
+            ## :white_check_mark: Success
             ```
-            ${output}
+            ${run.output}
             ```
           post-on-failure: |
-            :x: Failure
+            ## :x: Failure
             ```
-            ${output}
+            ${run.output}
             ```
