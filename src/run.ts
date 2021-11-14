@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import * as github from '@actions/github'
 import { GitHub } from '@actions/github/lib/utils'
+import { evaluateTemplate } from './template'
 
 type Octokit = InstanceType<typeof GitHub>
 
@@ -24,27 +25,34 @@ export const run = async (inputs: Inputs): Promise<void> => {
   }
   if (inputs.run) {
     const result = await runCommand(inputs.run)
+    const context = {
+      output: result.lines.join('\n'),
+      lines: result.lines,
+      code: result.code,
+    }
     if (result.code === 0 && inputs.postOnSuccess) {
-      return await postComment(octokit, inputs.postOnSuccess)
+      const body = evaluateTemplate(inputs.postOnSuccess, context)
+      return await postComment(octokit, body)
     }
     if (inputs.postOnFailure) {
-      await postComment(octokit, inputs.postOnFailure)
+      const body = evaluateTemplate(inputs.postOnFailure, context)
+      await postComment(octokit, body)
     }
     throw new Error(`Command exited with code ${result.code}`)
   }
 }
 
 const runCommand = async (cmdline: string) => {
-  const out: string[] = []
+  const lines: string[] = []
   const code = await exec.exec(cmdline, undefined, {
     ignoreReturnCode: true,
     listeners: {
-      stdline: (s) => out.push(s),
-      errline: (s) => out.push(s),
+      stdline: (s) => lines.push(s),
+      errline: (s) => lines.push(s),
     },
   })
   core.info(`Exit ${code}`)
-  return { code, out }
+  return { code, lines }
 }
 
 const postComment = async (octokit: Octokit, body: string) => {

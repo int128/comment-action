@@ -1,3 +1,0 @@
-test('run successfully', async () => {
-  //
-})

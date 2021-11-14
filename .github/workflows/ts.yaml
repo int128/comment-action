@@ -45,11 +45,17 @@ jobs:
       - name: With run and success
         uses: ./
         with:
-          run: date
+          run: uname -a
           post-on-success: |
             :white_check_mark: Success
+            ```
+            ${output}
+            ```
           post-on-failure: |
             :x: Failure
+            ```
+            ${output}
+            ```
 
       - name: With run and failure
         continue-on-error: true
@@ -58,5 +64,11 @@ jobs:
           run: false
           post-on-success: |
             :white_check_mark: Success
+            ```
+            ${output}
+            ```
           post-on-failure: |
             :x: Failure
+            ```
+            ${output}
+            ```
