@@ -26,9 +26,11 @@ export const run = async (inputs: Inputs): Promise<void> => {
   if (inputs.run) {
     const result = await runCommand(inputs.run)
     const context = {
-      output: result.lines.join('\n'),
-      lines: result.lines,
       code: result.code,
+      lines: result.lines,
+      get output(): string {
+        return this.lines.join('\n')
+      },
     }
     if (result.code === 0 && inputs.postOnSuccess) {
       const body = evaluateTemplate(inputs.postOnSuccess, context)
