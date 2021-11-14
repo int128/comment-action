@@ -48,7 +48,7 @@ export const run = async (inputs: Inputs): Promise<void> => {
 
 const runCommand = async (cmdline: string) => {
   const lines: string[] = []
-  const code = await exec.exec(cmdline, undefined, {
+  const code = await exec.exec('bash', ['-c', cmdline], {
     ignoreReturnCode: true,
     listeners: {
       stdline: (s) => lines.push(s),
