@@ -25,7 +25,9 @@ jobs:
             :wave: Hello World
 ```
 
-To run a command and post the result:
+### Run a command
+
+To run a command and post the output on failure:
 
 ```yaml
 jobs:
@@ -33,11 +35,23 @@ jobs:
     steps:
       - uses: int128/comment-action@v1
         with:
-          run: |
-            yarn test
+          run: yarn test
           post-on-failure: |
-            :x: Test failure
+            ## :x: Test failure
+            ```
+            ${run.output}
+            ```
 ```
+
+You can use JavaScript based string interpolation in `post-on-success` and `post-on-failure`.
+The following variables are available:
+
+- `run.output` (string)
+  - combined output of the command
+- `run.lines` (array of strings)
+  - combined output of the command
+- `run.code` (number)
+  - exit code of the command
 
 
 ## Inputs
@@ -45,7 +59,7 @@ jobs:
 | Name | Default | Description
 |------|----------|------------
 | `post` | - | If set, post a comment to the pull request
-| `run` | - | If set, run a command and post the result to the pull request
+| `run` | - | If set, run a command
 | `post-on-success` | - | If set, post a comment on success of the command
 | `post-on-failure` | - | If set, post a comment on failure of the command
 | `token` | `github.token` | GitHub token
