@@ -11,4 +11,4 @@ const main = async (): Promise<void> => {
   })
 }
 
-main().catch((e) => core.setFailed(e instanceof Error ? e.message : JSON.stringify(e)))
+main().catch((e) => core.setFailed(e instanceof Error ? e : String(e)))
