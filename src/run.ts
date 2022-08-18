@@ -34,10 +34,14 @@ export const run = async (inputs: Inputs): Promise<void> => {
         },
       },
     }
-    if (result.code === 0 && inputs.postOnSuccess) {
-      const body = evaluateTemplate(inputs.postOnSuccess, context)
-      return await postComment(octokit, body)
+    if (result.code === 0) {
+      if (inputs.postOnSuccess) {
+        const body = evaluateTemplate(inputs.postOnSuccess, context)
+        return await postComment(octokit, body)
+      }
+      return
     }
+
     if (inputs.postOnFailure) {
       const body = evaluateTemplate(inputs.postOnFailure, context)
       await postComment(octokit, body)
