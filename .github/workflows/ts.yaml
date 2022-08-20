@@ -59,7 +59,9 @@ jobs:
         continue-on-error: true
         uses: ./
         with:
-          run: false
+          run: |
+            date | cut -f1 -d' '
+            false
           post-on-success: |
             ## :white_check_mark: Success
             ```
