@@ -32,6 +32,8 @@ jobs:
 You can create an issue or update the issue if exists.
 It is useful to avoid too many comments in an issue.
 
+<img width="920" alt="image" src="https://user-images.githubusercontent.com/321266/193756823-d9b668be-afa2-46eb-b9d7-d5d38da46a03.png">
+
 To replace the issue body if it exists,
 
 ```yaml
