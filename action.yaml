@@ -5,6 +5,13 @@ inputs:
   post:
     description: If set, post a comment to the pull request
     required: false
+  update-if-exists:
+    description: If set, create or update a comment. This must be either replace or append
+    required: false
+  update-if-exists-key:
+    description: Key for update-if-exists, appended into a comment
+    required: true
+    default: ${{ github.workflow }}/${{ github.job }}
   run:
     description: If set, run a command and post the result to the pull request
     required: false
