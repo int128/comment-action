@@ -1,9 +1,11 @@
 import * as github from '@actions/github'
 import { runCommand } from './command'
-import { postComment } from './comment'
+import { postComment, UpdateIfExistsType } from './comment'
 
 type Inputs = {
   post: string
+  updateIfExists: UpdateIfExistsType
+  updateIfExistsKey: string
   run: string
   postOnSuccess: string
   postOnFailure: string
@@ -17,7 +19,11 @@ export const run = async (inputs: Inputs): Promise<void> => {
 
   const octokit = github.getOctokit(inputs.token)
   if (inputs.post) {
-    return await postComment(octokit, inputs.post)
+    return await postComment(octokit, {
+      body: inputs.post,
+      updateIfExists: inputs.updateIfExists,
+      updateIfExistsKey: inputs.updateIfExistsKey,
+    })
   }
   if (inputs.run) {
     return await runCommand(octokit, inputs)

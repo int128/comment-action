@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import { GitHub } from '@actions/github/lib/utils'
-import { postComment } from './comment'
+import { postComment, UpdateIfExistsType } from './comment'
 import { evaluateTemplate } from './template'
 
 type Octokit = InstanceType<typeof GitHub>
@@ -10,6 +10,8 @@ type Inputs = {
   run: string
   postOnSuccess: string
   postOnFailure: string
+  updateIfExists: UpdateIfExistsType
+  updateIfExistsKey: string
 }
 
 export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
@@ -26,14 +28,22 @@ export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
   if (result.code === 0) {
     if (inputs.postOnSuccess) {
       const body = evaluateTemplate(inputs.postOnSuccess, context)
-      return await postComment(octokit, body)
+      return await postComment(octokit, {
+        body,
+        updateIfExists: inputs.updateIfExists,
+        updateIfExistsKey: inputs.updateIfExistsKey,
+      })
     }
     return
   }
 
   if (inputs.postOnFailure) {
     const body = evaluateTemplate(inputs.postOnFailure, context)
-    await postComment(octokit, body)
+    await postComment(octokit, {
+      body,
+      updateIfExists: inputs.updateIfExists,
+      updateIfExistsKey: inputs.updateIfExistsKey,
+    })
   }
   throw new Error(`Command exited with code ${result.code}`)
 }
