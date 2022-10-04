@@ -28,10 +28,11 @@ export const postComment = async (octokit: Octokit, inputs: Inputs) => {
 const createOrUpdateComment = async (octokit: Octokit, pullRequest: PullRequest, inputs: Inputs) => {
   if (inputs.updateIfExists === undefined) {
     core.info(`Creating a comment to #${pullRequest.issue_number}`)
-    await octokit.rest.issues.createComment({
+    const { data: created } = await octokit.rest.issues.createComment({
       ...pullRequest,
       body: inputs.body,
     })
+    core.info(`Created a comment ${created.html_url}`)
     return
   }
 
@@ -39,25 +40,27 @@ const createOrUpdateComment = async (octokit: Octokit, pullRequest: PullRequest,
   core.info(`Finding key ${commentKey} from comments in #${pullRequest.issue_number}`)
   const comment = await findComment(octokit, pullRequest, commentKey)
   if (!comment) {
-    core.info(`Creating a comment to #${pullRequest.issue_number}`)
-    await octokit.rest.issues.createComment({
+    core.info(`Key not found in #${pullRequest.issue_number}`)
+    const { data: created } = await octokit.rest.issues.createComment({
       ...pullRequest,
       body: `${inputs.body}\n${commentKey}`,
     })
+    core.info(`Created a comment ${created.html_url}`)
     return
   }
 
-  core.info(`Updating the comment ${comment.html_url}`)
+  core.info(`Key found at the comment ${comment.html_url}`)
   let body = `${inputs.body}\n${commentKey}`
   if (inputs.updateIfExists === 'append') {
     body = `${comment.body}\n${body}`
   }
-  await octokit.rest.issues.updateComment({
+  const { data: updated } = await octokit.rest.issues.updateComment({
     owner: pullRequest.owner,
     repo: pullRequest.repo,
     comment_id: comment.id,
     body,
   })
+  core.info(`Updated the comment ${updated.html_url}`)
 }
 
 type Comment = {
@@ -73,6 +76,7 @@ const findComment = async (octokit: Octokit, pullRequest: PullRequest, key: stri
     direction: 'desc',
     per_page: 100,
   })
+  core.info(`Found ${comments.length} comment(s) of #${pullRequest.issue_number}`)
   for (const comment of comments) {
     if (comment.body?.includes(key)) {
       return { ...comment, body: comment.body }
@@ -83,7 +87,7 @@ const findComment = async (octokit: Octokit, pullRequest: PullRequest, key: stri
 const inferPullRequestsFromContext = async (octokit: Octokit): Promise<PullRequest[]> => {
   const { context } = github
   if (Number.isSafeInteger(context.issue.number)) {
-    core.info(`Use ${context.issue.number} from the current context`)
+    core.info(`Use #${context.issue.number} from the current context`)
     return [
       {
         owner: context.repo.owner,
