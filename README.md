@@ -27,6 +27,54 @@ jobs:
             :wave: Hello World
 ```
 
+### Update the comment if exists
+
+You can create an issue or update the issue if exists.
+It is useful to avoid too many comments in an issue.
+
+To replace the issue body if it exists,
+
+```yaml
+jobs:
+  build:
+    steps:
+      - uses: int128/comment-action@v1
+        with:
+          update-if-exists: replace
+          post: |
+            :while_check_mark: The resource has been created
+```
+
+To append the issue body if it exists,
+
+```yaml
+jobs:
+  build:
+    steps:
+      - uses: int128/comment-action@v1
+        with:
+          update-if-exists: append
+          post: |
+            :warning: Creating resource
+```
+
+This action finds the latest comment created by same workflow and job, by default.
+It embeds the key into an issue comment as a markdown comment `<!-- -->`.
+
+If you need to identify a comment to update, set the key as follows:
+
+```yaml
+jobs:
+  build:
+    steps:
+      - uses: int128/comment-action@v1
+        with:
+          update-if-exists: append
+          update-if-exists-key: ${{ github.workflow }}/${{ github.job }}/terraform-plan
+          post: |
+            :warning: Creating resource
+```
+
 ### Run a command
 
 To run a command and post the output on failure:
@@ -61,9 +109,11 @@ The following variables are available:
 | Name | Default | Description
 |------|----------|------------
 | `post` | - | If set, post a comment to the pull request
+| `update-if-exists` | (optional) | If set, create or update a comment. This must be either `replace` or `append`
+| `update-if-exists-key` | `${{ github.workflow }}/${{ github.job }}` | Key for `update-if-exists`
 | `run` | - | If set, run a command
-| `post-on-success` | - | If set, post a comment on success of the command
-| `post-on-failure` | - | If set, post a comment on failure of the command
+| `post-on-success` | (optional) | If set, post a comment on success of the command
+| `post-on-failure` | (optional) | If set, post a comment on failure of the command
 | `token` | `github.token` | GitHub token
 
 Either `post` or `run` must be set.
