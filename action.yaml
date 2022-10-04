@@ -11,8 +11,7 @@ inputs:
   update-if-exists-key:
     description: Key for update-if-exists, appended into a comment
     required: true
-    default: |-
-      <!-- |comment-action|${{ github.workflow }}|${{ github.job }}| -->
+    default: ${{ github.workflow }}/${{ github.job }}
   run:
     description: If set, run a command and post the result to the pull request
     required: false

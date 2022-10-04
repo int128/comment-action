@@ -47,20 +47,6 @@ jobs:
           post: |
             :warning: This comment will be replaced.
 
-      - name: With update-if-exists
-        uses: ./
-        with:
-          update-if-exists: replace
-          post: |
-            :white_check_mark: This comment has been replaced.
-
-      - name: With update-if-exists
-        uses: ./
-        with:
-          update-if-exists: append
-          post: |
-            :memo: This comment should be appended.
-
       - name: With run and success
         uses: ./
         with:
@@ -91,3 +77,17 @@ jobs:
             ```
             ${run.output}
             ```
+
+      - name: With update-if-exists
+        uses: ./
+        with:
+          update-if-exists: replace
+          post: |
+            :white_check_mark: This comment has been replaced.
+
+      - name: With update-if-exists
+        uses: ./
+        with:
+          update-if-exists: append
+          post: |
+            :memo: This comment should be appended.

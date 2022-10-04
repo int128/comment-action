@@ -30,34 +30,53 @@ const createOrUpdateComment = async (octokit: Octokit, pullRequest: PullRequest,
     core.info(`Creating a comment to #${pullRequest.issue_number}`)
     await octokit.rest.issues.createComment({
       ...pullRequest,
-      body: `${inputs.body}\n${inputs.updateIfExistsKey}`,
+      body: inputs.body,
     })
     return
   }
 
-  core.info(`Finding the comments in #${pullRequest.issue_number}`)
-  const { data: comments } = await octokit.rest.issues.listCommentsForRepo(pullRequest)
-  for (const comment of comments) {
-    if (comment.body === undefined) {
-      continue
-    }
-    if (!comment.body.includes(inputs.updateIfExistsKey)) {
-      continue
-    }
-    core.info(`Found the comment ${comment.html_url}`)
-
-    let body = `${inputs.body}\n${inputs.updateIfExistsKey}`
-    if (inputs.updateIfExists === 'append') {
-      body = `${comment.body}\n${body}`
-    }
-
-    core.info(`Updating the comment ${comment.html_url}`)
-    await octokit.rest.issues.updateComment({
-      owner: pullRequest.owner,
-      repo: pullRequest.repo,
-      comment_id: comment.id,
-      body,
+  const commentKey = `<!-- comment-action/${inputs.updateIfExistsKey} -->`
+  core.info(`Finding key ${commentKey} from comments in #${pullRequest.issue_number}`)
+  const comment = await findComment(octokit, pullRequest, commentKey)
+  if (!comment) {
+    core.info(`Creating a comment to #${pullRequest.issue_number}`)
+    await octokit.rest.issues.createComment({
+      ...pullRequest,
+      body: `${inputs.body}\n${commentKey}`,
     })
+    return
+  }
+
+  core.info(`Updating the comment ${comment.html_url}`)
+  let body = `${inputs.body}\n${commentKey}`
+  if (inputs.updateIfExists === 'append') {
+    body = `${comment.body}\n${body}`
+  }
+  await octokit.rest.issues.updateComment({
+    owner: pullRequest.owner,
+    repo: pullRequest.repo,
+    comment_id: comment.id,
+    body,
+  })
+}
+
+type Comment = {
+  id: number
+  body: string
+  html_url: string
+}
+
+const findComment = async (octokit: Octokit, pullRequest: PullRequest, key: string): Promise<Comment | undefined> => {
+  const { data: comments } = await octokit.rest.issues.listCommentsForRepo({
+    ...pullRequest,
+    sort: 'created',
+    direction: 'desc',
+    per_page: 100,
+  })
+  for (const comment of comments) {
+    if (comment.body?.includes(key)) {
+      return { ...comment, body: comment.body }
+    }
   }
 }
 
