@@ -13,6 +13,8 @@ This action infers pull request(s) from the context as follows:
 - On `push` event, use pull request(s) associated with the current commit
 - Otherwise, get pull request(s) associated with `github.sha`
 
+### Post a comment
+
 To post a comment:
 
 ```yaml
