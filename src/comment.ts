@@ -29,7 +29,9 @@ const createOrUpdateComment = async (octokit: Octokit, pullRequest: PullRequest,
   if (inputs.updateIfExists === undefined) {
     core.info(`Creating a comment to #${pullRequest.issue_number}`)
     const { data: created } = await octokit.rest.issues.createComment({
-      ...pullRequest,
+      owner: pullRequest.owner,
+      repo: pullRequest.repo,
+      issue_number: pullRequest.issue_number,
       body: inputs.body,
     })
     core.info(`Created a comment ${created.html_url}`)
@@ -42,7 +44,9 @@ const createOrUpdateComment = async (octokit: Octokit, pullRequest: PullRequest,
   if (!comment) {
     core.info(`Key not found in #${pullRequest.issue_number}`)
     const { data: created } = await octokit.rest.issues.createComment({
-      ...pullRequest,
+      owner: pullRequest.owner,
+      repo: pullRequest.repo,
+      issue_number: pullRequest.issue_number,
       body: `${inputs.body}\n${commentKey}`,
     })
     core.info(`Created a comment ${created.html_url}`)
@@ -70,8 +74,10 @@ type Comment = {
 }
 
 const findComment = async (octokit: Octokit, pullRequest: PullRequest, key: string): Promise<Comment | undefined> => {
-  const { data: comments } = await octokit.rest.issues.listCommentsForRepo({
-    ...pullRequest,
+  const { data: comments } = await octokit.rest.issues.listComments({
+    owner: pullRequest.owner,
+    repo: pullRequest.repo,
+    issue_number: pullRequest.issue_number,
     sort: 'created',
     direction: 'desc',
     per_page: 100,
