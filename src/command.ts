@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import { GitHub } from '@actions/github/lib/utils'
 import { postComment, UpdateIfExistsType } from './comment'
-import { evaluateTemplate } from './template'
+import { replaceTemplate } from './template'
 
 type Octokit = InstanceType<typeof GitHub>
 
@@ -17,17 +17,12 @@ type Inputs = {
 export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
   const result = await execute(inputs.run)
   const context = {
-    run: {
-      code: result.code,
-      lines: result.lines,
-      get output(): string {
-        return this.lines.join('\n')
-      },
-    },
+    '${run.code}': String(result.code),
+    '${run.output}': result.lines.join('\n'),
   }
   if (result.code === 0) {
     if (inputs.postOnSuccess) {
-      const body = evaluateTemplate(inputs.postOnSuccess, context)
+      const body = replaceTemplate(inputs.postOnSuccess, context)
       return await postComment(octokit, {
         body,
         updateIfExists: inputs.updateIfExists,
@@ -38,7 +33,7 @@ export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
   }
 
   if (inputs.postOnFailure) {
-    const body = evaluateTemplate(inputs.postOnFailure, context)
+    const body = replaceTemplate(inputs.postOnFailure, context)
     await postComment(octokit, {
       body,
       updateIfExists: inputs.updateIfExists,
