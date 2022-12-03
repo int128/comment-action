@@ -95,16 +95,17 @@ jobs:
             ```
 ```
 
-You can use JavaScript based string interpolation in `post-on-success` and `post-on-failure`.
+You can use the string interpolation in `post-on-success` and `post-on-failure`.
 The following variables are available:
 
-- `run.output` (string)
+- `${run.output}`
   - combined output of the command
-- `run.lines` (array of strings)
-  - combined output of the command
-- `run.code` (number)
+- `${run.code}`
   - exit code of the command
 
+This action does not support any script to keep it simple and secure.
+You can still write a script by `actions/github-script`,
+but it would be nice to write your awesome action by a programming language for maintainability.
 
 ## Inputs
 
@@ -119,10 +120,3 @@ The following variables are available:
 | `token` | `github.token` | GitHub token
 
 Either `post` or `run` must be set.
-
-
-## Outputs
-
-| Name | Description
-|------|------------
-| `example` | example output

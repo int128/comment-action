@@ -66,7 +66,7 @@ jobs:
         continue-on-error: true
         uses: ./
         with:
-          run: false
+          run: cat dummy-file
           post-on-success: |
             ## :white_check_mark: Success
             ```
