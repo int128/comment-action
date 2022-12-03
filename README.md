@@ -105,7 +105,7 @@ The following variables are available:
 
 This action does not support any script to keep it simple and secure.
 You can still write a script by `actions/github-script`,
-but it would be a good chance to write your awesome action by a programming language.
+but it would be nice to write your awesome action by a programming language for maintainability.
 
 ## Inputs
 
