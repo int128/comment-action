@@ -24,4 +24,7 @@ const updateIfExists = (s: string): UpdateIfExistsType => {
   return s
 }
 
-main().catch((e) => core.setFailed(e instanceof Error ? e : String(e)))
+main().catch((e: Error) => {
+  core.setFailed(e)
+  console.error(e)
+})
