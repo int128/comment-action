@@ -9,6 +9,7 @@ type Inputs = {
   run: string
   postOnSuccess: string
   postOnFailure: string
+  issueNumber: number | undefined
   token: string
 }
 
@@ -23,6 +24,7 @@ export const run = async (inputs: Inputs): Promise<void> => {
       body: inputs.post,
       updateIfExists: inputs.updateIfExists,
       updateIfExistsKey: inputs.updateIfExistsKey,
+      issueNumber: inputs.issueNumber,
     })
   }
   if (inputs.run) {

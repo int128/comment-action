@@ -8,6 +8,7 @@ type Inputs = {
   body: string
   updateIfExists: UpdateIfExistsType
   updateIfExistsKey: string
+  issueNumber: number | undefined
 }
 
 export type UpdateIfExistsType = 'replace' | 'append' | undefined
@@ -19,6 +20,17 @@ type PullRequest = {
 }
 
 export const postComment = async (octokit: Octokit, inputs: Inputs) => {
+  if (inputs.issueNumber) {
+    const { context } = github
+    const pr = {
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      issue_number: inputs.issueNumber,
+    }
+    await createOrUpdateComment(octokit, pr, inputs)
+    return
+  }
+
   const pullRequests = await inferPullRequestsFromContext(octokit)
   for (const pullRequest of pullRequests) {
     await createOrUpdateComment(octokit, pullRequest, inputs)

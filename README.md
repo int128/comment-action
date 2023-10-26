@@ -13,6 +13,8 @@ This action infers pull request(s) from the context as follows:
 - On `push` event, use pull request(s) associated with the current commit
 - Otherwise, get pull request(s) associated with `github.sha`
 
+You can also specify the issue or pull request number via `issue-number` input.
+
 ### Post a comment
 
 To post a comment:
@@ -117,6 +119,7 @@ but it would be nice to write your awesome action by a programming language for 
 | `run` | - | If set, run a command
 | `post-on-success` | (optional) | If set, post a comment on success of the command
 | `post-on-failure` | (optional) | If set, post a comment on failure of the command
+| `issue-number` | (optional) | Number of an issue or pull request on which to create a comment
 | `token` | `github.token` | GitHub token
 
 Either `post` or `run` must be set.

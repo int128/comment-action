@@ -12,6 +12,7 @@ type Inputs = {
   postOnFailure: string
   updateIfExists: UpdateIfExistsType
   updateIfExistsKey: string
+  issueNumber: number | undefined
 }
 
 export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
@@ -27,6 +28,7 @@ export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
         body,
         updateIfExists: inputs.updateIfExists,
         updateIfExistsKey: inputs.updateIfExistsKey,
+        issueNumber: inputs.issueNumber,
       })
     }
     return
@@ -38,6 +40,7 @@ export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
       body,
       updateIfExists: inputs.updateIfExists,
       updateIfExistsKey: inputs.updateIfExistsKey,
+      issueNumber: inputs.issueNumber,
     })
   }
   throw new Error(`Command exited with code ${result.code}`)
