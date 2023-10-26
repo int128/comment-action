@@ -91,3 +91,11 @@ jobs:
           update-if-exists: append
           post: |
             :memo: This comment should be appended.
+
+      - if: github.event_name == 'pull_request'
+        name: With issue-number
+        uses: ./
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          post: |
+            :memo: `issue-number` input works
