@@ -91,3 +91,10 @@ jobs:
           update-if-exists: append
           post: |
             :memo: This comment should be appended.
+
+      - name: With update-if-exists
+        uses: ./
+        with:
+          update-if-exists: recreate
+          post: |
+            :memo: This comment should be recreated.
