@@ -3,7 +3,6 @@
 This is an action to post a comment to the current pull request.
 It is inspired from [suzuki-shunsuke/github-comment](https://github.com/suzuki-shunsuke/github-comment).
 
-
 ## Getting Started
 
 This action infers pull request(s) from the context as follows:
@@ -34,7 +33,7 @@ It is useful to avoid too many comments in an issue.
 
 <img width="920" alt="image" src="https://user-images.githubusercontent.com/321266/193756823-d9b668be-afa2-46eb-b9d7-d5d38da46a03.png">
 
-To replace the issue body if it exists,
+To replace the comment if it exists,
 
 ```yaml
 jobs:
@@ -47,7 +46,7 @@ jobs:
             :while_check_mark: The resource has been created
 ```
 
-To append the issue body if it exists,
+To append the comment if it exists,
 
 ```yaml
 jobs:
@@ -56,6 +55,19 @@ jobs:
       - uses: int128/comment-action@v1
         with:
           update-if-exists: append
+          post: |
+            :warning: Creating resource
+```
+
+To recreate the comment if it exists,
+
+```yaml
+jobs:
+  build:
+    steps:
+      - uses: int128/comment-action@v1
+        with:
+          update-if-exists: recreate
           post: |
             :warning: Creating resource
 ```
@@ -81,7 +93,7 @@ jobs:
 
 To run a command and post the output on failure:
 
-```yaml
+````yaml
 jobs:
   build:
     steps:
@@ -93,7 +105,7 @@ jobs:
             ```
             ${run.output}
             ```
-```
+````
 
 You can use the string interpolation in `post-on-success` and `post-on-failure`.
 The following variables are available:
@@ -109,14 +121,14 @@ but it would be nice to write your awesome action by a programming language for 
 
 ## Inputs
 
-| Name | Default | Description
-|------|----------|------------
-| `post` | - | If set, post a comment to the pull request
-| `update-if-exists` | (optional) | If set, create or update a comment. This must be either `replace` or `append`
-| `update-if-exists-key` | `${{ github.workflow }}/${{ github.job }}` | Key for `update-if-exists`
-| `run` | - | If set, run a command
-| `post-on-success` | (optional) | If set, post a comment on success of the command
-| `post-on-failure` | (optional) | If set, post a comment on failure of the command
-| `token` | `github.token` | GitHub token
+| Name                   | Default                                    | Description                                                                   |
+| ---------------------- | ------------------------------------------ | ----------------------------------------------------------------------------- |
+| `post`                 | -                                          | If set, post a comment to the pull request                                    |
+| `update-if-exists`     | (optional)                                 | If set, create or update a comment. This must be either `replace`, `append` or `recreate` |
+| `update-if-exists-key` | `${{ github.workflow }}/${{ github.job }}` | Key for `update-if-exists`                                                    |
+| `run`                  | -                                          | If set, run a command                                                         |
+| `post-on-success`      | (optional)                                 | If set, post a comment on success of the command                              |
+| `post-on-failure`      | (optional)                                 | If set, post a comment on failure of the command                              |
+| `token`                | `github.token`                             | GitHub token                                                                  |
 
 Either `post` or `run` must be set.
