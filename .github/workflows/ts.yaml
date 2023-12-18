@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
@@ -78,14 +78,21 @@ jobs:
             ${run.output}
             ```
 
-      - name: With update-if-exists
+      - name: With update-if-exists=recreate
+        uses: ./
+        with:
+          update-if-exists: recreate
+          post: |
+            :memo: This comment should be recreated.
+
+      - name: With update-if-exists=replace
         uses: ./
         with:
           update-if-exists: replace
           post: |
             :white_check_mark: This comment has been replaced.
 
-      - name: With update-if-exists
+      - name: With update-if-exists=append
         uses: ./
         with:
           update-if-exists: append

@@ -11,7 +11,7 @@ type Inputs = {
   issueNumber: number | undefined
 }
 
-export type UpdateIfExistsType = 'replace' | 'append' | undefined
+export type UpdateIfExistsType = 'replace' | 'append' | 'recreate' | undefined
 
 type PullRequest = {
   owner: string
@@ -55,6 +55,24 @@ const createOrUpdateComment = async (octokit: Octokit, pullRequest: PullRequest,
   const comment = await findComment(octokit, pullRequest, commentKey)
   if (!comment) {
     core.info(`Key not found in #${pullRequest.issue_number}`)
+    const { data: created } = await octokit.rest.issues.createComment({
+      owner: pullRequest.owner,
+      repo: pullRequest.repo,
+      issue_number: pullRequest.issue_number,
+      body: `${inputs.body}\n${commentKey}`,
+    })
+    core.info(`Created a comment ${created.html_url}`)
+    return
+  }
+
+  if (inputs.updateIfExists === 'recreate') {
+    await octokit.rest.issues.deleteComment({
+      owner: pullRequest.owner,
+      repo: pullRequest.repo,
+      comment_id: comment.id,
+    })
+    core.info(`Deleted the comment ${comment.html_url}`)
+
     const { data: created } = await octokit.rest.issues.createComment({
       owner: pullRequest.owner,
       repo: pullRequest.repo,
