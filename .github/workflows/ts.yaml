@@ -21,6 +21,9 @@ on:
 jobs:
   ts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -98,3 +101,11 @@ jobs:
           update-if-exists: append
           post: |
             :memo: This comment should be appended.
+
+      - if: github.event_name == 'pull_request'
+        name: With issue-number
+        uses: ./
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          post: |
+            :memo: `issue-number` input works

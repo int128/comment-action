@@ -21,6 +21,9 @@ inputs:
   post-on-failure:
     description: If set, post a comment on failure of the command
     required: false
+  issue-number:
+    description: Number of an issue or pull request on which to create a comment
+    required: false
   token:
     description: GitHub token
     required: true
