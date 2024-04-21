@@ -1,10 +1,10 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import { GitHub } from '@actions/github/lib/utils'
-import { postComment, UpdateIfExistsType } from './comment'
-import { replaceTemplate } from './template'
+import * as github from '@actions/github'
+import { postComment, UpdateIfExistsType } from './comment.js'
+import { replaceTemplate } from './template.js'
 
-type Octokit = InstanceType<typeof GitHub>
+type Octokit = ReturnType<typeof github.getOctokit>
 
 type Inputs = {
   run: string

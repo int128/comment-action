@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-import { UpdateIfExistsType } from './comment'
-import { run } from './run'
+import { UpdateIfExistsType } from './comment.js'
+import { run } from './run.js'
 
 const main = async (): Promise<void> => {
   await run({

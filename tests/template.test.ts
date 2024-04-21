@@ -1,4 +1,4 @@
-import { replaceTemplate } from '../src/template'
+import { replaceTemplate } from '../src/template.js'
 
 test('plain text', () => {
   expect(replaceTemplate('foo', {})).toBe('foo')
