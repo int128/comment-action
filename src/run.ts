@@ -1,6 +1,6 @@
 import * as github from '@actions/github'
-import { runCommand } from './command'
-import { postComment, UpdateIfExistsType } from './comment'
+import { runCommand } from './command.js'
+import { postComment, UpdateIfExistsType } from './comment.js'
 
 type Inputs = {
   post: string
