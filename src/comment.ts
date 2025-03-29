@@ -1,7 +1,6 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
-
-type Octokit = ReturnType<typeof github.getOctokit>
+import { Octokit } from '@octokit/action'
+import { Context } from './github.js'
 
 type Inputs = {
   body: string
@@ -18,9 +17,8 @@ type PullRequest = {
   issue_number: number
 }
 
-export const postComment = async (octokit: Octokit, inputs: Inputs) => {
+export const postComment = async (inputs: Inputs, octokit: Octokit, context: Context) => {
   if (inputs.issueNumber) {
-    const { context } = github
     const pr = {
       owner: context.repo.owner,
       repo: context.repo.repo,
@@ -30,7 +28,7 @@ export const postComment = async (octokit: Octokit, inputs: Inputs) => {
     return
   }
 
-  const pullRequests = await inferPullRequestsFromContext(octokit)
+  const pullRequests = await inferPullRequestsFromContext(octokit, context)
   for (const pullRequest of pullRequests) {
     await createOrUpdateComment(octokit, pullRequest, inputs)
   }
@@ -119,15 +117,26 @@ const findComment = async (octokit: Octokit, pullRequest: PullRequest, key: stri
   }
 }
 
-const inferPullRequestsFromContext = async (octokit: Octokit): Promise<PullRequest[]> => {
-  const { context } = github
-  if (Number.isSafeInteger(context.issue.number)) {
-    core.info(`Use #${context.issue.number} from the current context`)
+const inferPullRequestsFromContext = async (octokit: Octokit, context: Context): Promise<PullRequest[]> => {
+  if ('issue' in context.payload) {
+    const issueNumber = context.payload.issue.number
+    core.info(`Use the issue #${issueNumber} from the current context`)
     return [
       {
         owner: context.repo.owner,
         repo: context.repo.repo,
-        issue_number: context.issue.number,
+        issue_number: issueNumber,
+      },
+    ]
+  }
+  if ('pull_request' in context.payload) {
+    const pullNumber = context.payload.pull_request.number
+    core.info(`Use the pull request #${pullNumber} from the current context`)
+    return [
+      {
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        issue_number: pullNumber,
       },
     ]
   }

@@ -1,4 +1,5 @@
-import * as github from '@actions/github'
+import { Context } from './github.js'
+import { Octokit } from '@octokit/action'
 import { runCommand } from './command.js'
 import { postComment, UpdateIfExistsType } from './comment.js'
 
@@ -10,24 +11,27 @@ type Inputs = {
   postOnSuccess: string
   postOnFailure: string
   issueNumber: number | undefined
-  token: string
 }
 
-export const run = async (inputs: Inputs): Promise<void> => {
+export const run = async (inputs: Inputs, octokit: Octokit, context: Context): Promise<void> => {
   if (!inputs.post && !inputs.run) {
     throw new Error(`either post or run must be set`)
   }
 
-  const octokit = github.getOctokit(inputs.token)
   if (inputs.post) {
-    return await postComment(octokit, {
-      body: inputs.post,
-      updateIfExists: inputs.updateIfExists,
-      updateIfExistsKey: inputs.updateIfExistsKey,
-      issueNumber: inputs.issueNumber,
-    })
+    return await postComment(
+      {
+        body: inputs.post,
+        updateIfExists: inputs.updateIfExists,
+        updateIfExistsKey: inputs.updateIfExistsKey,
+        issueNumber: inputs.issueNumber,
+      },
+      octokit,
+      context,
+    )
   }
+
   if (inputs.run) {
-    return await runCommand(octokit, inputs)
+    return await runCommand(inputs, octokit, context)
   }
 }

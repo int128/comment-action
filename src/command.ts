@@ -1,10 +1,9 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import * as github from '@actions/github'
-import { postComment, UpdateIfExistsType } from './comment.js'
+import { Context } from './github.js'
+import { Octokit } from '@octokit/action'
 import { replaceTemplate } from './template.js'
-
-type Octokit = ReturnType<typeof github.getOctokit>
+import { postComment, UpdateIfExistsType } from './comment.js'
 
 type Inputs = {
   run: string
@@ -15,33 +14,41 @@ type Inputs = {
   issueNumber: number | undefined
 }
 
-export const runCommand = async (octokit: Octokit, inputs: Inputs) => {
+export const runCommand = async (inputs: Inputs, octokit: Octokit, context: Context) => {
   const result = await execute(inputs.run)
-  const context = {
+  const templateContext = {
     '${run.code}': String(result.code),
     '${run.output}': result.lines.join('\n'),
   }
   if (result.code === 0) {
     if (inputs.postOnSuccess) {
-      const body = replaceTemplate(inputs.postOnSuccess, context)
-      return await postComment(octokit, {
-        body,
-        updateIfExists: inputs.updateIfExists,
-        updateIfExistsKey: inputs.updateIfExistsKey,
-        issueNumber: inputs.issueNumber,
-      })
+      const body = replaceTemplate(inputs.postOnSuccess, templateContext)
+      return await postComment(
+        {
+          body,
+          updateIfExists: inputs.updateIfExists,
+          updateIfExistsKey: inputs.updateIfExistsKey,
+          issueNumber: inputs.issueNumber,
+        },
+        octokit,
+        context,
+      )
     }
     return
   }
 
   if (inputs.postOnFailure) {
-    const body = replaceTemplate(inputs.postOnFailure, context)
-    await postComment(octokit, {
-      body,
-      updateIfExists: inputs.updateIfExists,
-      updateIfExistsKey: inputs.updateIfExistsKey,
-      issueNumber: inputs.issueNumber,
-    })
+    const body = replaceTemplate(inputs.postOnFailure, templateContext)
+    await postComment(
+      {
+        body,
+        updateIfExists: inputs.updateIfExists,
+        updateIfExistsKey: inputs.updateIfExistsKey,
+        issueNumber: inputs.issueNumber,
+      },
+      octokit,
+      context,
+    )
   }
   throw new Error(`Command exited with code ${result.code}`)
 }
