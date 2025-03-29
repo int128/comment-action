@@ -1,3 +1,5 @@
+import { test } from 'vitest'
+import { expect } from 'vitest'
 import { replaceTemplate } from '../src/template.js'
 
 test('plain text', () => {
