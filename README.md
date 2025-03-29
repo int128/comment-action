@@ -146,6 +146,7 @@ jobs:
         with:
           repository: owner/repo
           issue-number: 12345
+          token: # PAT or GitHub App token is needed for another repository
           post: |
             :wave: Hello World
 ```
