@@ -11,6 +11,7 @@ type Inputs = {
   postOnFailure: string
   updateIfExists: UpdateIfExistsType
   updateIfExistsKey: string
+  repository: string
   issueNumber: number | undefined
 }
 
@@ -28,6 +29,7 @@ export const runCommand = async (inputs: Inputs, octokit: Octokit, context: Cont
           body,
           updateIfExists: inputs.updateIfExists,
           updateIfExistsKey: inputs.updateIfExistsKey,
+          repository: inputs.repository,
           issueNumber: inputs.issueNumber,
         },
         octokit,
@@ -44,6 +46,7 @@ export const runCommand = async (inputs: Inputs, octokit: Octokit, context: Cont
         body,
         updateIfExists: inputs.updateIfExists,
         updateIfExistsKey: inputs.updateIfExistsKey,
+        repository: inputs.repository,
         issueNumber: inputs.issueNumber,
       },
       octokit,

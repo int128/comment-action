@@ -12,6 +12,7 @@ const main = async (): Promise<void> => {
       run: core.getInput('run'),
       postOnSuccess: core.getInput('post-on-success'),
       postOnFailure: core.getInput('post-on-failure'),
+      repository: core.getInput('repository', { required: true }),
       issueNumber: issueNumber(core.getInput('issue-number')),
     },
     getOctokit(),
