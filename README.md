@@ -121,17 +121,50 @@ This action does not support any script to keep it simple and secure.
 You can still write a script by `actions/github-script`,
 but it would be nice to write your awesome action by a programming language for maintainability.
 
-## Inputs
+### Specify an issue number or repository
 
-| Name                   | Default                                    | Description                                                                   |
-| ---------------------- | ------------------------------------------ | ----------------------------------------------------------------------------- |
-| `post`                 | -                                          | If set, post a comment to the pull request                                    |
+To post a comment to a specific issue or pull request,
+
+```yaml
+jobs:
+  build:
+    steps:
+      - uses: int128/comment-action@v1
+        with:
+          issue-number: 12345
+          post: |
+            :wave: Hello World
+```
+
+To post a comment to a specific issue or pull request in a specific repository,
+
+```yaml
+jobs:
+  build:
+    steps:
+      - uses: int128/comment-action@v1
+        with:
+          repository: owner/repo
+          issue-number: 12345
+          token: # PAT or GitHub App token is needed for another repository
+          post: |
+            :wave: Hello World
+```
+
+## Specification
+
+### Inputs
+
+| Name                   | Default                                    | Description                                                                               |
+| ---------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `post`                 | -                                          | If set, post a comment to the pull request                                                |
 | `update-if-exists`     | (optional)                                 | If set, create or update a comment. This must be either `replace`, `append` or `recreate` |
-| `update-if-exists-key` | `${{ github.workflow }}/${{ github.job }}` | Key for `update-if-exists`                                                    |
-| `run`                  | -                                          | If set, run a command                                                         |
-| `post-on-success`      | (optional)                                 | If set, post a comment on success of the command                              |
-| `post-on-failure`      | (optional)                                 | If set, post a comment on failure of the command                              |
-| `issue-number`         | (optional)                                 | Number of an issue or pull request on which to create a comment               |
-| `token`                | `github.token`                             | GitHub token                                                                  |
+| `update-if-exists-key` | `${{ github.workflow }}/${{ github.job }}` | Key for `update-if-exists`                                                                |
+| `run`                  | -                                          | If set, run a command                                                                     |
+| `post-on-success`      | (optional)                                 | If set, post a comment on success of the command                                          |
+| `post-on-failure`      | (optional)                                 | If set, post a comment on failure of the command                                          |
+| `repository`           | `${{ github.repository }}`                 | Repository name in the format of `owner/repo`                                             |
+| `issue-number`         | (optional)                                 | Number of an issue or pull request on which to create a comment                           |
+| `token`                | `github.token`                             | GitHub token                                                                              |
 
 Either `post` or `run` must be set.

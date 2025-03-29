@@ -10,6 +10,7 @@ type Inputs = {
   run: string
   postOnSuccess: string
   postOnFailure: string
+  repository: string
   issueNumber: number | undefined
 }
 
@@ -24,6 +25,7 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
         body: inputs.post,
         updateIfExists: inputs.updateIfExists,
         updateIfExistsKey: inputs.updateIfExistsKey,
+        repository: inputs.repository,
         issueNumber: inputs.issueNumber,
       },
       octokit,

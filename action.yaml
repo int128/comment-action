@@ -21,6 +21,10 @@ inputs:
   post-on-failure:
     description: If set, post a comment on failure of the command
     required: false
+  repository:
+    description: Repository name in the format of `owner/repo`
+    required: true
+    default: ${{ github.repository }}
   issue-number:
     description: Number of an issue or pull request on which to create a comment
     required: false
