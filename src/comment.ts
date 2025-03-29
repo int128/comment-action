@@ -21,12 +21,11 @@ type Issue = {
 
 export const postComment = async (inputs: Inputs, octokit: Octokit, context: Context) => {
   if (inputs.issueNumber) {
-    const [owner, repo] = inputs.repository.split('/')
-    assert(owner, 'repository must be in the format of owner/repo')
-    assert(repo, 'repository must be in the format of owner/repo')
+    const repoParts = inputs.repository.split('/')
+    assert(repoParts.length === 2, 'repository must be in the format of owner/repo')
     const issue = {
-      owner,
-      repo,
+      owner: repoParts[0],
+      repo: repoParts[1],
       number: inputs.issueNumber,
     }
     await createOrUpdateComment(issue, octokit, inputs)
