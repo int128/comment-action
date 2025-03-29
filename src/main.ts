@@ -1,18 +1,22 @@
 import * as core from '@actions/core'
 import { UpdateIfExistsType } from './comment.js'
 import { run } from './run.js'
+import { getContext, getOctokit } from './github.js'
 
 const main = async (): Promise<void> => {
-  await run({
-    post: core.getInput('post'),
-    updateIfExists: updateIfExists(core.getInput('update-if-exists')),
-    updateIfExistsKey: core.getInput('update-if-exists-key'),
-    run: core.getInput('run'),
-    postOnSuccess: core.getInput('post-on-success'),
-    postOnFailure: core.getInput('post-on-failure'),
-    issueNumber: issueNumber(core.getInput('issue-number')),
-    token: core.getInput('token'),
-  })
+  await run(
+    {
+      post: core.getInput('post'),
+      updateIfExists: updateIfExists(core.getInput('update-if-exists')),
+      updateIfExistsKey: core.getInput('update-if-exists-key'),
+      run: core.getInput('run'),
+      postOnSuccess: core.getInput('post-on-success'),
+      postOnFailure: core.getInput('post-on-failure'),
+      issueNumber: issueNumber(core.getInput('issue-number')),
+    },
+    getOctokit(),
+    await getContext(),
+  )
 }
 
 const updateIfExists = (s: string): UpdateIfExistsType => {
