@@ -10,7 +10,7 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/exec": "1.1.1",
-    "@octokit/action": "7.0.1",
+    "@octokit/action": "7.0.2",
     "@octokit/plugin-retry": "7.2.1"
   },
   "devDependencies": {
