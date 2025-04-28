@@ -22,11 +22,11 @@
     "@vitest/eslint-plugin": "1.1.43",
     "eslint": "9.25.1",
     "js-yaml": "4.1.0",
-    "pnpm": "10.9.0",
+    "pnpm": "10.10.0",
     "prettier": "3.5.3",
     "typescript": "5.8.3",
     "typescript-eslint": "8.31.0",
     "vitest": "3.1.2"
   },
-  "packageManager": "pnpm@10.9.0"
+  "packageManager": "pnpm@10.10.0"
 }
