@@ -20,7 +20,7 @@
     "@types/node": "20.17.47",
     "@vercel/ncc": "0.38.3",
     "@vitest/eslint-plugin": "1.2.0",
-    "eslint": "9.26.0",
+    "eslint": "9.27.0",
     "js-yaml": "4.1.0",
     "pnpm": "10.11.0",
     "prettier": "3.5.3",
