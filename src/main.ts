@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
-import { UpdateIfExistsType } from './comment.js'
-import { run } from './run.js'
+import type { UpdateIfExistsType } from './comment.js'
 import { getContext, getOctokit } from './github.js'
+import { run } from './run.js'
 
 const main = async (): Promise<void> => {
   await run(

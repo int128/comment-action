@@ -1,9 +1,9 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import { Context } from './github.js'
-import { Octokit } from '@octokit/action'
+import type { Octokit } from '@octokit/action'
+import { postComment, type UpdateIfExistsType } from './comment.js'
+import type { Context } from './github.js'
 import { replaceTemplate } from './template.js'
-import { postComment, UpdateIfExistsType } from './comment.js'
 
 type Inputs = {
   run: string
