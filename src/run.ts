@@ -1,7 +1,7 @@
-import { Context } from './github.js'
-import { Octokit } from '@octokit/action'
+import type { Octokit } from '@octokit/action'
 import { runCommand } from './command.js'
-import { postComment, UpdateIfExistsType } from './comment.js'
+import { postComment, type UpdateIfExistsType } from './comment.js'
+import type { Context } from './github.js'
 
 type Inputs = {
   post: string
