@@ -1,6 +1,6 @@
+import assert from 'node:assert'
 import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
-import assert from 'assert'
 import type { Context } from './github.js'
 
 type Inputs = {
