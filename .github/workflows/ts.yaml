@@ -34,6 +34,7 @@ jobs:
       - run: npm install -g pnpm@latest-10
       - run: pnpm i
       - run: pnpm test
+      - run: pnpm biome check --fix
       - run: pnpm build
 
       - name: With post
