@@ -105,7 +105,7 @@ type Comment = {
 }
 
 const findComment = async (octokit: Octokit, issue: Issue, key: string): Promise<Comment | undefined> => {
-  const { data: comments } = await octokit.paginate(octokit.rest.issues.listComments, {
+  const comments = await octokit.paginate(octokit.rest.issues.listComments, {
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number,
